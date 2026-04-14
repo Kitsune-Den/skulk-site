@@ -196,13 +196,22 @@ const Hero = () => {
         style={{ opacity: bgOpacity }}
         aria-hidden
       >
+        {/* Image with a radial mask so all four edges feather softly into the
+            page background — no sharp rectangle, image looks like it's
+            floating in the dark. */}
         <div
           className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: "url(/skulk-hero-bg.jpg)" }}
+          style={{
+            backgroundImage: "url(/skulk-hero-bg.jpg)",
+            WebkitMaskImage:
+              "radial-gradient(ellipse 90% 80% at center, black 30%, transparent 95%)",
+            maskImage:
+              "radial-gradient(ellipse 90% 80% at center, black 30%, transparent 95%)",
+          }}
         />
-        {/* Readability overlay — darkens the image toward the bottom so the
-            headline stays legible and the fade into the next section is clean. */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/55 to-[#080808]" />
+        {/* Readability overlay — subtle darkening under the headline, and a
+            firm fade to the page bg at the bottom for a clean section transition. */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-[#080808]" />
       </motion.div>
 
       {/* Atmosphere */}
