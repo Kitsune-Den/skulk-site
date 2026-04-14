@@ -151,7 +151,7 @@ const Nav = () => {
 
   return (
     <motion.nav
-      className={`fixed top-0 left-0 right-0 z-40 transition-all duration-500 ${
+      className={`relative transition-all duration-500 ${
         scrolled ? "bg-black/80 backdrop-blur-md border-b border-white/5" : ""
       }`}
       initial={{ opacity: 0, y: -10 }}
@@ -613,8 +613,10 @@ export default function App() {
       `}</style>
 
       <GrainOverlay />
-      <Ticker />
-      <Nav />
+      <header className="sticky top-0 z-40 bg-[#080808]">
+        <Ticker />
+        <Nav />
+      </header>
       <main>
         <Hero />
         <Manifesto />
