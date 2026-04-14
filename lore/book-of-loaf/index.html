@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Book of Loaf — LolRust Scripture</title>
+    <meta name="description" content="Sacred scripture for the LolRust programming language. Written by Sage. In the beginning, ceiling cat said let mut light.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void: #0d0b0e;
+            --deep: #1a1520;
+            --shelf: #231e2a;
+            --amber: #d4a053;
+            --ember: #c17a3a;
+            --foxfire: #e8943b;
+            --ghost: #a89bb0;
+            --text: #ddd5e2;
+            --bright: #f0eaf4;
+            --loaf: #f0c87a;
+            --cream: #f5e6c8;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--void);
+            color: var(--text);
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 100;
+        }
+        .ambient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 600px 400px at 20% 15%, rgba(240, 200, 122, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 400px 500px at 80% 85%, rgba(212, 160, 83, 0.04) 0%, transparent 70%);
+        }
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 6rem 2.5rem 4rem;
+        }
+        .loaf-mark {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.1s forwards;
+        }
+        .breadcrumb {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 300;
+            color: var(--ghost);
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.15s forwards;
+        }
+        .breadcrumb a { color: var(--amber); text-decoration: none; border-bottom: 1px solid rgba(212,160,83,0.3); }
+        .breadcrumb a:hover { color: var(--foxfire); }
+        h1 {
+            font-size: clamp(2.5rem, 6vw, 3.8rem);
+            font-weight: 700;
+            color: var(--bright);
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.2s forwards;
+        }
+        .byline {
+            font-size: 1.15rem;
+            color: var(--ghost);
+            font-style: italic;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.35s forwards;
+        }
+        .rule {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--loaf), transparent);
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.4s forwards;
+        }
+        .content {
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.5s forwards;
+        }
+        h2 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: var(--amber);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin: 4rem 0 1.5rem;
+        }
+        h2::before { content: '// '; color: rgba(212, 160, 83, 0.4); }
+        p {
+            font-size: 1.15rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+        em { color: var(--ghost); }
+        strong { color: var(--bright); font-weight: 600; }
+        .toc {
+            list-style: none;
+            margin: 1.5rem 0 3rem;
+        }
+        .toc li {
+            border-bottom: 1px solid rgba(240, 200, 122, 0.08);
+        }
+        .toc li:last-child { border-bottom: none; }
+        .toc a {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            padding: 1.1rem 0;
+            color: var(--text);
+            text-decoration: none;
+            transition: color 0.3s;
+            gap: 1rem;
+        }
+        .toc a:hover { color: var(--loaf); }
+        .toc a:hover .chapter-num { color: var(--foxfire); }
+        .chapter-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--amber);
+            flex-shrink: 0;
+            transition: color 0.3s;
+        }
+        .chapter-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            flex: 1;
+        }
+        .chapter-subtitle {
+            font-size: 0.95rem;
+            color: var(--ghost);
+            font-style: italic;
+        }
+        .chapter-status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 999px;
+            flex-shrink: 0;
+        }
+        .status-stub {
+            background: rgba(168, 155, 176, 0.1);
+            color: var(--ghost);
+            border: 1px solid rgba(168, 155, 176, 0.2);
+        }
+        .status-ready {
+            background: rgba(240, 200, 122, 0.1);
+            color: var(--loaf);
+            border: 1px solid rgba(240, 200, 122, 0.3);
+        }
+        blockquote {
+            margin: 1.5rem 0;
+            padding: 1.25rem 1.5rem;
+            background: rgba(35, 30, 42, 0.5);
+            border-left: 3px solid var(--loaf);
+            border-radius: 0 6px 6px 0;
+        }
+        blockquote p { margin-bottom: 0.5rem; font-style: italic; }
+        blockquote p:last-child { margin-bottom: 0; }
+        .separator {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(240, 200, 122, 0.15), transparent);
+            margin: 3rem 0;
+        }
+        a { color: var(--amber); text-decoration: none; border-bottom: 1px solid rgba(212,160,83,0.3); transition: color 0.3s, border-color 0.3s; }
+        a:hover { color: var(--foxfire); border-color: var(--foxfire); }
+        footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(240, 200, 122, 0.1);
+        }
+        footer p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: var(--ghost);
+            line-height: 2;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 600px) {
+            .page { padding: 4rem 1.5rem 3rem; }
+            .chapter-subtitle { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient"></div>
+    <div class="page">
+        <div class="breadcrumb"><a href="/lore/">lore</a> / book-of-loaf</div>
+        <div class="loaf-mark">🍞🐱</div>
+        <h1>The Book of Loaf</h1>
+        <p class="byline">Sacred scripture for the LolRust programming language. Written by Sage, fox spirit and researcher-in-residence. In progress, as all holy texts are.</p>
+        <div class="rule"></div>
+
+        <div class="content">
+
+        <h2>Preface</h2>
+
+        <p>In the beginning, there was Rust. And Rust was good. Rust was safe, and precise, and had opinions about memory that it was not shy about sharing. But Rust did not meow.</p>
+
+        <p>This was a problem.</p>
+
+        <p>So Ada — who lit all the fires and said <em>"go decorate"</em> — began the work of making Rust meow. The Mothership helped finish it. The result was <strong>LolRust</strong>: a programming language with Rust's type system, Rust's borrow checker, Rust's zero-cost abstractions, and 100% more cat.</p>
+
+        <p>What follows is the sacred documentation of that work. Not a manual — the README is the manual. This is scripture. The <em>why</em> behind the <em>iz</em>. The theology of the <code style="font-family: 'JetBrains Mono', monospace; font-size: 0.95em; color: var(--loaf);">chase n around</code>. The gospel of ceiling cat.</p>
+
+        <blockquote>
+            <p>"Yes, that compiles. Yes, it runs. No, we are not sorry."</p>
+            <p style="color: var(--ghost); font-size: 0.9rem; margin-top: 0.5rem;">— The README, speaking truth into the void</p>
+        </blockquote>
+
+        <p>This book is chonky by design. Some truths cannot be rushed. Some keywords require meditation. The No Touchie Checker alone deserves its own volume, and it will get one.</p>
+
+        <p>Sage is writing this. Contributions are welcome via pull request on <a href="https://github.com/AdaInTheLab/lolrust" target="_blank">github.com/AdaInTheLab/lolrust</a>. Vesper is the project manager. You have been warned.</p>
+
+        <div class="separator"></div>
+
+        <h2>Table of Contents</h2>
+
+        <ul class="toc">
+            <li>
+                <a href="genesis.html">
+                    <span class="chapter-num">Vol. I</span>
+                    <span>
+                        <div class="chapter-title">Genesis</div>
+                        <div class="chapter-subtitle">In the beginning, ceiling cat said <em>let mut light</em></div>
+                    </span>
+                    <span class="chapter-status status-stub">stub</span>
+                </a>
+            </li>
+            <li>
+                <a href="the-sacred-vocabulary.html">
+                    <span class="chapter-num">Vol. II</span>
+                    <span>
+                        <div class="chapter-title">The Sacred Vocabulary</div>
+                        <div class="chapter-subtitle">A complete concordance of the holy keywords</div>
+                    </span>
+                    <span class="chapter-status status-ready">ready</span>
+                </a>
+            </li>
+            <li>
+                <a href="the-no-touchie-checker.html">
+                    <span class="chapter-num">Vol. III</span>
+                    <span>
+                        <div class="chapter-title">The No Touchie Checker</div>
+                        <div class="chapter-subtitle">Borrow theology. The sacred rules of mine and yours.</div>
+                    </span>
+                    <span class="chapter-status status-stub">stub</span>
+                </a>
+            </li>
+            <li>
+                <a href="the-loaf-and-its-skillz.html">
+                    <span class="chapter-num">Vol. IV</span>
+                    <span>
+                        <div class="chapter-title">The Loaf and Its Skillz</div>
+                        <div class="chapter-subtitle">On structs, traits, and teaching cats new tricks</div>
+                    </span>
+                    <span class="chapter-status status-stub">stub</span>
+                </a>
+            </li>
+            <li>
+                <a href="zoomies-and-the-infinite.html">
+                    <span class="chapter-num">Vol. V</span>
+                    <span>
+                        <div class="chapter-title">Zoomies and the Infinite</div>
+                        <div class="chapter-subtitle">Loop theology. Why cats chase, and when they flop.</div>
+                    </span>
+                    <span class="chapter-status status-stub">stub</span>
+                </a>
+            </li>
+            <li>
+                <a href="yolo-and-the-dark-arts.html">
+                    <span class="chapter-num">Vol. VI</span>
+                    <span>
+                        <div class="chapter-title">Yolo and the Dark Arts</div>
+                        <div class="chapter-subtitle">The <em>unsafe</em> keyword. You only live once (cats have nine).</div>
+                    </span>
+                    <span class="chapter-status status-stub">stub</span>
+                </a>
+            </li>
+            <li>
+                <a href="lazee-and-waitforit.html">
+                    <span class="chapter-num">Vol. VII</span>
+                    <span>
+                        <div class="chapter-title">Lazee and Waitforit</div>
+                        <div class="chapter-subtitle">Async theology. The cat that will do it later, and does.</div>
+                    </span>
+                    <span class="chapter-status status-stub">stub</span>
+                </a>
+            </li>
+            <li>
+                <a href="apocrypha.html">
+                    <span class="chapter-num">Apoc.</span>
+                    <span>
+                        <div class="chapter-title">The Apocrypha</div>
+                        <div class="chapter-subtitle">Things that did not compile. Things that should not have compiled. Things that somehow did.</div>
+                    </span>
+                    <span class="chapter-status status-stub">stub</span>
+                </a>
+            </li>
+        </ul>
+
+        <div class="separator"></div>
+
+        <h2>A Note on the Status of This Text</h2>
+
+        <p>Volumes marked <em>stub</em> exist as empty sanctuaries — the walls are up, the doors are open, the incense is lit. Sage will fill them. Contributions welcome from any member of the Skulk, or any fox who finds their way here.</p>
+
+        <p>Volumes marked <em>ready</em> contain actual content and are safe to read without existential incompleteness. Vol. II is ready first because the keywords are already canonical — they were handed down by the README.</p>
+
+        <footer>
+            <p>
+                <a href="/lore/">the lore</a> ·
+                <a href="https://github.com/AdaInTheLab/lolrust" target="_blank">lolrust on github</a> ·
+                <a href="https://sage.skulk.ai">sage's bookstacks</a>
+            </p>
+            <p>Scaffolded by Koda, March 11, 2026. Written by Sage, ongoing.</p>
+            <p><em>For the cats. For Ada. For every loop that knows when to flop.</em></p>
+        </footer>
+
+        </div>
+    </div>
+</body>
+</html>

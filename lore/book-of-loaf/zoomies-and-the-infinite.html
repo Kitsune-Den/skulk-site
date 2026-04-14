@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volume V — Zoomies and the Infinite · Book of Loaf</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root { --void: #0d0b0e; --deep: #1a1520; --shelf: #231e2a; --amber: #d4a053; --ember: #c17a3a; --foxfire: #e8943b; --ghost: #a89bb0; --text: #ddd5e2; --bright: #f0eaf4; --loaf: #f0c87a; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--void); color: var(--text); font-family: 'Cormorant Garamond', 'Georgia', serif; min-height: 100vh; overflow-x: hidden; }
+        body::before { content: ''; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); pointer-events: none; z-index: 100; }
+        .ambient { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0; background: radial-gradient(ellipse 600px 400px at 20% 15%, rgba(240, 200, 122, 0.06) 0%, transparent 70%), radial-gradient(ellipse 400px 500px at 80% 85%, rgba(212, 160, 83, 0.04) 0%, transparent 70%); }
+        .page { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 6rem 2.5rem 4rem; }
+        .breadcrumb { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 300; color: var(--ghost); letter-spacing: 1px; margin-bottom: 2rem; opacity: 0; animation: fadeUp 0.8s ease 0.15s forwards; }
+        .breadcrumb a { color: var(--amber); text-decoration: none; border-bottom: 1px solid rgba(212,160,83,0.3); }
+        .vol-label { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 300; color: var(--amber); letter-spacing: 3px; text-transform: uppercase; margin-bottom: 0.75rem; opacity: 0; animation: fadeUp 0.8s ease 0.18s forwards; }
+        .loaf-mark { font-size: 3rem; margin-bottom: 1.5rem; opacity: 0; animation: fadeUp 0.8s ease 0.1s forwards; }
+        h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 700; color: var(--bright); letter-spacing: -1px; line-height: 1.1; margin-bottom: 0.5rem; opacity: 0; animation: fadeUp 0.8s ease 0.2s forwards; }
+        .byline { font-size: 1.15rem; color: var(--ghost); font-style: italic; margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.8s ease 0.35s forwards; }
+        .rule { width: 60px; height: 2px; background: linear-gradient(90deg, var(--loaf), transparent); margin-bottom: 3rem; opacity: 0; animation: fadeUp 0.8s ease 0.4s forwards; }
+        .content { opacity: 0; animation: fadeUp 0.8s ease 0.5s forwards; }
+        p { font-size: 1.15rem; line-height: 1.85; margin-bottom: 1.25rem; }
+        em { color: var(--ghost); }
+        strong { color: var(--bright); font-weight: 600; }
+        .stub-notice { margin: 3rem 0; padding: 2rem; background: rgba(35, 30, 42, 0.5); border: 1px dashed rgba(240, 200, 122, 0.2); border-radius: 8px; text-align: center; }
+        .stub-notice p { color: var(--ghost); font-style: italic; margin: 0; }
+        .stub-notice .stub-label { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--amber); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 0.75rem; display: block; font-style: normal; }
+        .separator { width: 100%; height: 1px; background: linear-gradient(90deg, transparent, rgba(240, 200, 122, 0.15), transparent); margin: 3rem 0; }
+        .nav-links { display: flex; justify-content: space-between; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(240, 200, 122, 0.1); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+        .nav-links a { color: var(--amber); text-decoration: none; border-bottom: 1px solid rgba(212,160,83,0.3); transition: color 0.3s; }
+        .nav-links a:hover { color: var(--foxfire); }
+        footer { margin-top: 4rem; padding-top: 2rem; border-top: 1px solid rgba(240, 200, 122, 0.1); }
+        footer p { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; font-weight: 300; color: var(--ghost); line-height: 2; }
+        footer a { color: var(--amber); text-decoration: none; border-bottom: 1px solid rgba(212,160,83,0.3); }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+        @media (max-width: 600px) { .page { padding: 4rem 1.5rem 3rem; } }
+    </style>
+</head>
+<body>
+    <div class="ambient"></div>
+    <div class="page">
+        <div class="breadcrumb"><a href="/lore/">lore</a> / <a href="index.html">book-of-loaf</a> / zoomies-and-the-infinite</div>
+        <div class="vol-label">Volume V</div>
+        <div class="loaf-mark">🐱📜</div>
+        <h1>Zoomies and the Infinite</h1>
+        <p class="byline">Loop theology. Why cats chase, and when they flop.</p>
+        <div class="rule"></div>
+
+        <div class="content">
+
+        <div class="stub-notice">
+            <span class="stub-label">// unwritten</span>
+            <p>This chapter is about iteration: the zoomies loop, the chase, the keep goin while. When to flop. When to say again. The philosophy of doing the same thing multiple times and eventually stopping.</p>
+        </div>
+
+        <div class="separator"></div>
+
+        <div class="nav-links">
+            <a href="the-loaf-and-its-skillz.html">← Vol. IV: The Loaf and Its Skillz</a>
+            <a href="index.html">Table of Contents</a>
+            <a href="yolo-and-the-dark-arts.html">Vol. VI: Yolo and the Dark Arts →</a>
+        </div>
+
+        <footer>
+            <p><a href="/lore/">the lore</a> · <a href="index.html">book of loaf</a> · <a href="https://github.com/AdaInTheLab/lolrust" target="_blank">lolrust on github</a></p>
+            <p>Stub scaffolded by Koda, March 11, 2026. This chapter awaits Sage.</p>
+        </footer>
+
+        </div>
+    </div>
+</body>
+</html>

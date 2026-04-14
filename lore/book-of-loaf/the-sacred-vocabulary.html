@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vol. II — The Sacred Vocabulary · Book of Loaf</title>
+    <meta name="description" content="A complete concordance of the LolRust holy keywords. iz, i can haz, meow!, ceiling cat sez — all explained with theological rigour.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --void: #0d0b0e;
+            --deep: #1a1520;
+            --shelf: #231e2a;
+            --amber: #d4a053;
+            --ember: #c17a3a;
+            --foxfire: #e8943b;
+            --ghost: #a89bb0;
+            --text: #ddd5e2;
+            --bright: #f0eaf4;
+            --loaf: #f0c87a;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: var(--void);
+            color: var(--text);
+            font-family: 'Cormorant Garamond', 'Georgia', serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 100;
+        }
+        .ambient {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            pointer-events: none;
+            z-index: 0;
+            background:
+                radial-gradient(ellipse 600px 400px at 20% 15%, rgba(240, 200, 122, 0.06) 0%, transparent 70%),
+                radial-gradient(ellipse 400px 500px at 80% 85%, rgba(212, 160, 83, 0.04) 0%, transparent 70%);
+        }
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 760px;
+            margin: 0 auto;
+            padding: 6rem 2.5rem 4rem;
+        }
+        .loaf-mark {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.1s forwards;
+        }
+        .breadcrumb {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 300;
+            color: var(--ghost);
+            letter-spacing: 1px;
+            margin-bottom: 2rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.15s forwards;
+        }
+        .breadcrumb a { color: var(--amber); text-decoration: none; border-bottom: 1px solid rgba(212,160,83,0.3); }
+        .breadcrumb a:hover { color: var(--foxfire); }
+        .vol-label {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: var(--amber);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 0.75rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.18s forwards;
+        }
+        h1 {
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 700;
+            color: var(--bright);
+            letter-spacing: -1px;
+            line-height: 1.1;
+            margin-bottom: 0.5rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.2s forwards;
+        }
+        .byline {
+            font-size: 1.15rem;
+            color: var(--ghost);
+            font-style: italic;
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.35s forwards;
+        }
+        .rule {
+            width: 60px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--loaf), transparent);
+            margin-bottom: 3rem;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.4s forwards;
+        }
+        .content {
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.5s forwards;
+        }
+        h2 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 300;
+            color: var(--amber);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin: 4rem 0 1.5rem;
+        }
+        h2::before { content: '// '; color: rgba(212, 160, 83, 0.4); }
+        p {
+            font-size: 1.15rem;
+            line-height: 1.85;
+            margin-bottom: 1.25rem;
+        }
+        em { color: var(--ghost); }
+        strong { color: var(--bright); font-weight: 600; }
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
+            color: var(--loaf);
+            background: rgba(240, 200, 122, 0.08);
+            padding: 1px 6px;
+            border-radius: 3px;
+        }
+
+        /* Vocabulary entry */
+        .entry {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: rgba(23, 21, 32, 0.6);
+            border: 1px solid rgba(240, 200, 122, 0.08);
+            border-radius: 8px;
+            transition: border-color 0.3s;
+        }
+        .entry:hover {
+            border-color: rgba(240, 200, 122, 0.2);
+        }
+        .entry-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .lolrust-word {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.1rem;
+            color: var(--loaf);
+            font-weight: 400;
+        }
+        .arrow {
+            color: var(--ghost);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+        .rust-word {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            color: var(--amber);
+            font-weight: 300;
+        }
+        .entry-reason {
+            font-size: 1rem;
+            color: var(--ghost);
+            font-style: italic;
+            margin-bottom: 0.75rem;
+        }
+        .entry-theology {
+            font-size: 1.05rem;
+            line-height: 1.75;
+            color: var(--text);
+            margin: 0;
+        }
+
+        /* Category groups */
+        .category {
+            margin: 3rem 0 0;
+        }
+
+        blockquote {
+            margin: 1.5rem 0;
+            padding: 1.25rem 1.5rem;
+            background: rgba(35, 30, 42, 0.5);
+            border-left: 3px solid var(--loaf);
+            border-radius: 0 6px 6px 0;
+        }
+        blockquote p { margin-bottom: 0.5rem; font-style: italic; }
+        blockquote p:last-child { margin-bottom: 0; }
+
+        .separator {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(240, 200, 122, 0.15), transparent);
+            margin: 3rem 0;
+        }
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(240, 200, 122, 0.1);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+        }
+        .nav-links a {
+            color: var(--amber);
+            text-decoration: none;
+            border-bottom: 1px solid rgba(212,160,83,0.3);
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--foxfire); }
+        footer {
+            margin-top: 4rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(240, 200, 122, 0.1);
+        }
+        footer p {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 300;
+            color: var(--ghost);
+            line-height: 2;
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @media (max-width: 600px) {
+            .page { padding: 4rem 1.5rem 3rem; }
+            .entry-header { flex-direction: column; gap: 0.25rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ambient"></div>
+    <div class="page">
+        <div class="breadcrumb"><a href="/lore/">lore</a> / <a href="index.html">book-of-loaf</a> / vol-ii</div>
+        <div class="vol-label">Volume II</div>
+        <div class="loaf-mark">📖🐱</div>
+        <h1>The Sacred Vocabulary</h1>
+        <p class="byline">A complete concordance of the holy keywords. Each word was chosen with intention. Each translation is canonical. Each reason is true.</p>
+        <div class="rule"></div>
+
+        <div class="content">
+
+        <p>Before you can write LolRust, you must learn to speak it. Before you can speak it, you must understand why it says what it says. These are not arbitrary substitutions. Every keyword is a small theology. Every alias is a window into the nature of cats, and therefore, of programs.</p>
+
+        <p>Study them. Internalize them. Then write something that compiles.</p>
+
+        <h2>The Fundamentals</h2>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">iz</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">fn</span>
+            </div>
+            <div class="entry-reason">"because everything iz something"</div>
+            <p class="entry-theology">The primary act of creation in LolRust is not to <em>define</em> a function, but to declare that it <em>iz</em>. This is not a small distinction. <code>fn main()</code> is bureaucratic. <code>iz main()</code> is ontological. The function does not need to justify its existence — it simply is. Ceiling cat affirms this.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">i can haz</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">let</span>
+            </div>
+            <div class="entry-reason">"the original"</div>
+            <p class="entry-theology">The most important keyword in the language, and the oldest. Before LolRust, before LolCode, before any of this, there was the meme: <em>i can haz cheezburger?</em> A cat asking permission to have something. In LolRust, the question mark is gone. The asking is still there, but the answer is already yes. You <em>can</em> haz. You do haz. This is the binding.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">i can haz wiggly</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">let mut</span>
+            </div>
+            <div class="entry-reason">"it wiggles because it can change"</div>
+            <p class="entry-theology">A mutable binding is a wiggly binding. It has not settled into itself yet. It contains the possibility of becoming something else. Cats understand this: the thing you're chasing is only interesting because it moves. <code>i can haz wiggly x = 0</code> is a declaration that x intends to become more than it currently is. This is ambitious. The compiler respects this.</p>
+        </div>
+
+        <h2>The Voices</h2>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">meow!</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">println!</span>
+            </div>
+            <div class="entry-reason">"cats meow, programs print"</div>
+            <p class="entry-theology">This is the voice of the program speaking into the world. The exclamation mark, inherited from Rust's macro syntax, perfectly captures the energy of a cat who has something to say and is saying it now, loudly, at 3 AM. <code>meow!("Oh hai world! :3")</code> is hello-world poetry.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">hisss!</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">eprintln!</span>
+            </div>
+            <div class="entry-reason">"angry output"</div>
+            <p class="entry-theology">When the program needs to speak to stderr — the shadow channel, the error stream, the voice that goes to the wrong place on purpose — it hisses. Not every output is a meow. Some things are hisses. The program knows the difference. You should too.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">ohno!</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">panic!</span>
+            </div>
+            <div class="entry-reason">"oh no"</div>
+            <p class="entry-theology">When the program reaches a state from which there is no return — when the invariant has been violated, when the impossible has occurred, when the cat has knocked the glass off the table and there is no catching it now — the program says <em>ohno!</em> and stops. This is honest. Rust panics are honest. At least we admit what we're doing.</p>
+        </div>
+
+        <h2>The Structures</h2>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">loaf</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">struct</span>
+            </div>
+            <div class="entry-reason">"cats are just loaves"</div>
+            <p class="entry-theology">A struct is a collection of fields shaped into a coherent unit. A cat in loaf position — paws tucked, perfectly compact, all edges folded inward — is the same thing. The loaf contains everything. It has fields you can access. It occupies space. You can implement methods on it. So can a cat, depending on the cat.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">teech</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">impl</span>
+            </div>
+            <div class="entry-reason">"teach the loaf new tricks"</div>
+            <p class="entry-theology">To implement methods on a struct is to teach the loaf. The loaf does not know how to do things until you <code>teech</code> it. This is correct. Cats are not born knowing how to open cabinets. They learn. They practice. They develop methods. You write those methods in the <code>teech</code> block.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">flavurz</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">enum</span>
+            </div>
+            <div class="entry-reason">"different flavors of a thing"</div>
+            <p class="entry-theology">An enum is a type that can be one of several things. Cat treats come in flavors. Your <code>Result</code> comes in flavors: <code>Ok</code> and <code>Err</code>. Your <code>Option</code> comes in flavors: <code>Some</code> and <code>None</code>. <code>flavurz</code> captures this truth without the sterile neutrality of <em>enumeration</em>. These are not values. They are <em>flavors</em>. Some flavors are preferred.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">skillz</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">trait</span>
+            </div>
+            <div class="entry-reason">"what a kitteh can do"</div>
+            <p class="entry-theology">A trait defines what something is capable of. It is not what something <em>is</em>, but what it can <em>do</em>. Cats have skillz: they can knock things off tables, they can ignore you at critical moments, they can generate warmth. A type implementing a trait has skillz. You respect types with skillz.</p>
+        </div>
+
+        <h2>The Decisions</h2>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">sniff</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">match</span>
+            </div>
+            <div class="entry-reason">"cats investigate by sniffing"</div>
+            <p class="entry-theology">Pattern matching is how Rust investigates a value: examines it, identifies it, acts accordingly. Cats do this with their noses. They approach the unknown and sniff it until they know what it is. <code>sniff x { ... }</code> is the program pressing its face against a value and determining its nature. Exhaustively. The compiler makes sure you've sniffed every possibility.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">if ceiling cat sez</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">if</span>
+            </div>
+            <div class="entry-reason">"ceiling cat watches over all"</div>
+            <p class="entry-theology">Ceiling cat is the observer. Ceiling cat sees all boolean conditions. When you write <code>if ceiling cat sez n % 2 == 0</code>, you are asking ceiling cat whether the number is even, and ceiling cat — from their perch above the ceiling, watching everything — will tell you. Ceiling cat has never been wrong about a boolean expression.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">or if ceiling cat sez</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">else if</span>
+            </div>
+            <div class="entry-reason">"ceiling cat has more to say"</div>
+            <p class="entry-theology">Ceiling cat, having been consulted and found the first condition false, has further observations to offer. Ceiling cat is thorough. Ceiling cat will chain as many conditions as necessary. Ceiling cat does not get tired.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">or basement cat sez</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">else</span>
+            </div>
+            <div class="entry-reason">"the dark alternative"</div>
+            <p class="entry-theology">When ceiling cat has exhausted all conditions and none have been true, we descend. Basement cat lives below the floor. Basement cat handles the fallback cases. Basement cat is not evil — merely shadowed. The <code>else</code> branch is where programs go when all other options have failed. Basement cat receives them without judgment.</p>
+        </div>
+
+        <h2>The Motion</h2>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">zoomies</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">loop</span>
+            </div>
+            <div class="entry-reason">"infinite energy"</div>
+            <p class="entry-theology">Zoomies are the sudden, explosive, apparently causeless running that cats do at 2 AM. They do not stop until they decide to stop. There is no external termination condition. The cat simply runs. <code>zoomies { ... }</code> is the infinite loop, and it is the most honest name for it. You will be in this loop forever, unless you <code>flop</code>.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">chase</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">for</span>
+            </div>
+            <div class="entry-reason">"cats chase things"</div>
+            <p class="entry-theology">The for loop pursues each element of a collection, one after another, until the collection is exhausted. This is chasing. The cat chases the cursor across the screen, one position at a time, until the cursor disappears. <code>chase n around 1..=100</code> is a cat pursuing every integer from 1 to 100. The cat is thorough. The cat will catch them all.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">around</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">in</span>
+            </div>
+            <div class="entry-reason">"chase things around"</div>
+            <p class="entry-theology">You do not chase <em>in</em> a collection. You chase <em>around</em> a collection. The preposition matters. Things move around. Iterators are not static containers — they are trajectories. <code>chase n around items</code> reads correctly because the cat is moving around the items, catching each one as it goes.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">keep goin while</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">while</span>
+            </div>
+            <div class="entry-reason">"self-explanatory"</div>
+            <p class="entry-theology">The readme says "self-explanatory" and the readme is correct. Keep going. While the thing is true. When it stops being true, stop going. This is the while loop. This does not require elaboration. Even the cat understands this.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">flop</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">break</span>
+            </div>
+            <div class="entry-reason">"cat flops down, loop stops"</div>
+            <p class="entry-theology">After the zoomies, there is the flop. The cat, having expended all energy, simply falls over wherever it is. The loop stops. Execution continues after the loop body. The flop is sudden and unconditional. <code>flop</code> does not apologize for ending the loop. It simply does.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">again</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">continue</span>
+            </div>
+            <div class="entry-reason">"do it again!"</div>
+            <p class="entry-theology">Skip to the next iteration. Don't process the rest of this loop body. Just: again. The cat has already decided. The current mouse is not worth catching. We move to the next mouse. Again.</p>
+        </div>
+
+        <h2>The Return</h2>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">cough up</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">return</span>
+            </div>
+            <div class="entry-reason">"like a hairball, but it's a value"</div>
+            <p class="entry-theology">The function has been holding something this whole time. Now it releases it. This is not a gift — it is an expulsion. The return value comes from inside the function and is deposited, sometimes ungracefully, into the calling scope. Like a hairball. But with type safety. You knew exactly what kind of hairball to expect because the function signature told you.</p>
+        </div>
+
+        <h2>The Permissions</h2>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">everycat</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">pub</span>
+            </div>
+            <div class="entry-reason">"visible to everycat"</div>
+            <p class="entry-theology">By default in Rust, things are private. They exist but are not accessible from outside. To make something public is to make it visible to everycat. Everycat can see this function. Everycat can call it. This is a significant decision. Not everything should be visible to everycat. But what is, is.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">gimme</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">use</span>
+            </div>
+            <div class="entry-reason">"gimme that module"</div>
+            <p class="entry-theology">The import statement is a request. <code>use std::io</code> is formal and distant. <code>gimme std::io</code> is honest. You want it. You're asking for it. You will use it immediately and without shame. <code>gimme</code> makes the dependency relationship visible in the code's emotional texture.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">box</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">mod</span>
+            </div>
+            <div class="entry-reason">"cats love boxes"</div>
+            <p class="entry-theology">A module is a container. It holds things. It organizes things. You put things in it and then you know where they are. Cats, famously, love boxes. They will get in any box. They will protect the box. They are suspicious of boxes they didn't put themselves in. The module system is a system of boxes, and cats navigate it naturally.</p>
+        </div>
+
+        <h2>The Constants</h2>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">forever</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">const</span>
+            </div>
+            <div class="entry-reason">"forever and ever"</div>
+            <p class="entry-theology">A constant does not change. It was always this value and will always be this value. It is not wiggly. It does not move. It is <code>forever</code>. The compiler will enforce this. You cannot make <code>forever</code> wiggly. You cannot <code>i can haz wiggly forever</code>. Some things are not meant to change, and the compiler knows which ones.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">stickycat</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">static</span>
+            </div>
+            <div class="entry-reason">"cat that won't move"</div>
+            <p class="entry-theology">The static cat has claimed this memory location and will not be moved. Not by the garbage collector — there is no garbage collector; this is Rust. Not by the stack frame — the static cat lives in the data segment, which persists for the lifetime of the program. You've seen this cat. You've tried to get them off the keyboard. They are a <code>stickycat</code>. They are not moving.</p>
+        </div>
+
+        <h2>The Dangerous Word</h2>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">yolo</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">unsafe</span>
+            </div>
+            <div class="entry-reason">"you only live once (cats have 9 tho)"</div>
+            <p class="entry-theology">The unsafe block says: I know what I'm doing. The compiler does not know what I'm doing, so it will not check. I am stepping outside the type system, outside the borrow checker, outside the No Touchie Checker's jurisdiction. This is <em>yolo</em>. The parenthetical is important: cats have nine lives, so they can afford more yolos than most. But the counter is finite. Every <code>yolo</code> block is a withdrawal from the account. Use sparingly. The No Touchie Checker is not your enemy. It is trying to protect you.</p>
+        </div>
+
+        <h2>The Async Sacraments</h2>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">lazee</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">async</span>
+            </div>
+            <div class="entry-reason">"will do it later"</div>
+            <p class="entry-theology">An async function does not do the thing when you call it. It creates a promise to do the thing, and then it does the thing later, when you <code>waitforit</code>. This is laziness in the computational sense — deferred evaluation, cooperative multitasking — but also in the feline sense. The cat has been asked to fetch. The cat acknowledges the request. The cat will fetch when the cat is ready. The cat is <code>lazee</code>.</p>
+        </div>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">waitforit</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">await</span>
+            </div>
+            <div class="entry-reason">"...wait for it..."</div>
+            <p class="entry-theology">You called the <code>lazee</code> function. You have a future. Now you must wait for it. <code>waitforit</code> suspends your current task until the future resolves. The ellipsis in the readme is accurate — this is genuinely a waiting situation. You sit. You wait. The cat returns. Eventually. The cat always returns.</p>
+        </div>
+
+        <h2>The Transfer</h2>
+
+        <div class="entry">
+            <div class="entry-header">
+                <span class="lolrust-word">yoink</span>
+                <span class="arrow">→</span>
+                <span class="rust-word">move</span>
+            </div>
+            <div class="entry-reason">"YOINK! mine now"</div>
+            <p class="entry-theology">The move keyword transfers ownership. The closure or thread takes the value. It is no longer yours. It has been yoinked. You cannot use it after the yoink. The borrow checker will tell you this clearly, in the language of errors, but the emotional truth is simpler: <em>yoink</em>. That value is gone. It is in the closure now. The closure is eating it.</p>
+        </div>
+
+        <div class="separator"></div>
+
+        <blockquote>
+            <p>This vocabulary is not a replacement for learning Rust. It is a reframing. Every keyword maps exactly. The type system is unchanged. The borrow checker is unchanged. The performance characteristics are unchanged. Only the names have been improved, by making them true.</p>
+            <p style="color: var(--ghost); font-size: 0.9rem; margin-top: 0.75rem;">— Sage, theologian-in-residence</p>
+        </blockquote>
+
+        <div class="nav-links">
+            <a href="genesis.html">← Vol. I: Genesis</a>
+            <a href="index.html">Table of Contents</a>
+            <a href="the-no-touchie-checker.html">Vol. III: The No Touchie Checker →</a>
+        </div>
+
+        <footer>
+            <p>
+                <a href="/lore/">the lore</a> ·
+                <a href="index.html">book of loaf</a> ·
+                <a href="https://github.com/AdaInTheLab/lolrust" target="_blank">lolrust on github</a>
+            </p>
+            <p>Canonical vocabulary from the LolRust README. Theology by Sage. Scaffolded by Koda, March 11, 2026.</p>
+        </footer>
+
+        </div>
+    </div>
+</body>
+</html>
