@@ -183,9 +183,28 @@ const Hero = () => {
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start start", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["0%", "25%"]);
   const opacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  // Hero background image: fixed to the viewport (so it stays put while the
+  // hero content scrolls), then fades out as the hero leaves the viewport so
+  // it doesn't bleed into the next section.
+  const bgOpacity = useTransform(scrollYProgress, [0, 0.85, 1], [1, 1, 0]);
 
   return (
     <section ref={ref} className="relative min-h-screen flex flex-col justify-center overflow-hidden">
+      {/* Sticky background image */}
+      <motion.div
+        className="fixed inset-0 pointer-events-none z-0"
+        style={{ opacity: bgOpacity }}
+        aria-hidden
+      >
+        <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{ backgroundImage: "url(/skulk-hero-bg.jpg)" }}
+        />
+        {/* Readability overlay — darkens the image toward the bottom so the
+            headline stays legible and the fade into the next section is clean. */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/55 to-[#080808]" />
+      </motion.div>
+
       {/* Atmosphere */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-[-15%] left-[-5%] w-[55%] h-[55%] rounded-full bg-orange-950/25 blur-[140px]" />
