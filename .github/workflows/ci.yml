@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            subdomains/*/package-lock.json
+
+      - name: Install main site dependencies
+        run: npm ci
+
+      - name: Build main site
+        run: npm run build
+
+      - name: Build subdomains that have their own package.json
+        run: |
+          set -euo pipefail
+          built=0
+          for dir in subdomains/*/; do
+            name=$(basename "$dir")
+            if [[ -f "$dir/package.json" ]]; then
+              echo "::group::Building $name"
+              (cd "$dir" && npm ci && npm run build)
+              echo "::endgroup::"
+              built=$((built + 1))
+            fi
+          done
+          echo "Built $built subdomain(s) with their own package.json"
