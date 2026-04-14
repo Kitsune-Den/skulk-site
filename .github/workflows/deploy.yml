@@ -24,6 +24,9 @@ jobs:
         with:
           node-version-file: .nvmrc
           cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            subdomains/*/package-lock.json
 
       - name: Install dependencies
         run: npm ci
@@ -47,15 +50,22 @@ jobs:
             dist/ \
             "$SSH_USER@$SSH_HOST:/home/$SSH_USER/$MAIN_DOMAIN/"
 
-      - name: Deploy subdomains → <name>.skulk.ai
+      - name: Build and deploy subdomains → <name>.skulk.ai
         run: |
           set -euo pipefail
           for dir in subdomains/*/; do
             name=$(basename "$dir")
-            echo "→ deploying $name.$MAIN_DOMAIN"
+            src="$dir"
+            # If a subdomain has its own package.json, build it and deploy dist/
+            if [[ -f "$dir/package.json" ]]; then
+              echo "→ building $name"
+              (cd "$dir" && npm ci && npm run build)
+              src="$dir/dist/"
+            fi
+            echo "→ deploying $name.$MAIN_DOMAIN from $src"
             rsync -avz --delete-after \
               --exclude='.DS_Store' --exclude='.git*' \
               -e "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
-              "$dir" \
+              "$src" \
               "$SSH_USER@$SSH_HOST:/home/$SSH_USER/$name.$MAIN_DOMAIN/"
           done
