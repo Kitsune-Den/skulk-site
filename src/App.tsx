@@ -122,7 +122,7 @@ const TICKER_ITEMS = [
 const Ticker = () => {
   const items = [...TICKER_ITEMS, ...TICKER_ITEMS];
   return (
-    <div className="overflow-hidden border-b border-white/10 bg-white/[0.02] py-2.5">
+    <div className="overflow-hidden border-b border-white/10 bg-white/[0.02] pt-4 pb-2.5">
       <motion.div
         className="flex gap-12 whitespace-nowrap"
         animate={{ x: ["0%", "-50%"] }}
