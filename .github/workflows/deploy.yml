@@ -43,7 +43,7 @@ jobs:
         run: |
           rsync -avz --delete-after \
             --exclude='.DS_Store' --exclude='.git*' \
-            -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes" \
+            -e "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
             dist/ \
             "$SSH_USER@$SSH_HOST:/home/$SSH_USER/$MAIN_DOMAIN/"
 
@@ -55,7 +55,7 @@ jobs:
             echo "→ deploying $name.$MAIN_DOMAIN"
             rsync -avz --delete-after \
               --exclude='.DS_Store' --exclude='.git*' \
-              -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes" \
+              -e "ssh -i ~/.ssh/id_ed25519 -o IdentitiesOnly=yes -o StrictHostKeyChecking=yes" \
               "$dir" \
               "$SSH_USER@$SSH_HOST:/home/$SSH_USER/$name.$MAIN_DOMAIN/"
           done
