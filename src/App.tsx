@@ -209,9 +209,19 @@ const Hero = () => {
               "radial-gradient(ellipse 90% 80% at center, black 30%, transparent 95%)",
           }}
         />
-        {/* Readability overlay — subtle darkening under the headline, and a
-            firm fade to the page bg at the bottom for a clean section transition. */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-[#080808]" />
+        {/* Center-column darkening — the source image has a visible seam
+            down the vertical middle (it's a composited diptych). This soft
+            dark band hides the seam and doubles as a readability backdrop
+            for "The Skulk." headline. */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "linear-gradient(90deg, transparent 25%, rgba(0,0,0,0.7) 50%, transparent 75%)",
+          }}
+        />
+        {/* Bottom fade — clean transition into the next section. */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[#080808]" />
       </motion.div>
 
       {/* Atmosphere */}
