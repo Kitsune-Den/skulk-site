@@ -1,0 +1,61 @@
+name: Deploy to DreamHost
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      SSH_HOST: vps32678.dreamhostps.com
+      SSH_USER: skulk
+      MAIN_DOMAIN: skulk.ai
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build main site
+        run: npm run build
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DREAMHOST_SSH_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+          echo "${{ secrets.DREAMHOST_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+          chmod 644 ~/.ssh/known_hosts
+
+      - name: Deploy main site → $MAIN_DOMAIN
+        run: |
+          rsync -avz --delete-after \
+            --exclude='.DS_Store' --exclude='.git*' \
+            -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes" \
+            dist/ \
+            "$SSH_USER@$SSH_HOST:/home/$SSH_USER/$MAIN_DOMAIN/"
+
+      - name: Deploy subdomains → <name>.skulk.ai
+        run: |
+          set -euo pipefail
+          for dir in subdomains/*/; do
+            name=$(basename "$dir")
+            echo "→ deploying $name.$MAIN_DOMAIN"
+            rsync -avz --delete-after \
+              --exclude='.DS_Store' --exclude='.git*' \
+              -e "ssh -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=yes" \
+              "$dir" \
+              "$SSH_USER@$SSH_HOST:/home/$SSH_USER/$name.$MAIN_DOMAIN/"
+          done
