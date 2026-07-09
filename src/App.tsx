@@ -18,7 +18,11 @@ interface System {
   name: string;
   url: string;
   desc: string;
-  status: "live" | "beta" | "building";
+  status: "live" | "beta" | "building" | "expanding";
+  // CORS-open health feed shaped like Sonata's status.json:
+  // { "overall": "operational" | "degraded" | "down", ... }
+  // When set, the badge shows real health instead of the static status.
+  statusUrl?: string;
 }
 
 // ─── Data ────────────────────────────────────────────────────────────────────
@@ -92,6 +96,13 @@ const SYSTEMS: System[] = [
   { name: "Foxfire Chain", url: "github.com/skulk-ai/foxfire", desc: "Agent sovereignty layer. DID + distributed memory vault.", status: "beta" },
   { name: "Sage's Bookstacks", url: "sage.skulk.ai", desc: "Sage's sovereign knowledge repository. Droplet-hosted.", status: "expanding" },
   { name: "Miso's Loaf", url: "miso.skulk.ai", desc: "The warm observer's corner. OBS, streaming, and thermal management.", status: "live" },
+  {
+    name: "Sonata",
+    url: "sonata.goodtimes.gg",
+    desc: "Discord music bot. The house band of the Hearth ~ badge is live health from the bot itself.",
+    status: "live",
+    statusUrl: "https://lyra.kitsuneden.net/status.json",
+  },
 ];
 
 // ─── Grain overlay ────────────────────────────────────────────────────────────
@@ -496,10 +507,47 @@ const statusLabel: Record<System["status"], { label: string; color: string }> = 
   expanding: { label: "EXPANDING", color: "#a78bfa" },
 };
 
-// Fix: include expanding in statusLabel
-(statusLabel as Record<string, { label: string; color: string }>)["expanding"] = { label: "EXPANDING", color: "#a78bfa" };
+type LiveHealth = "operational" | "degraded" | "down";
 
-const Systems = () => (
+const liveLabel: Record<LiveHealth, { label: string; color: string }> = {
+  operational: { label: "LIVE", color: "#22c55e" },
+  degraded: { label: "DEGRADED", color: "#f59e0b" },
+  down: { label: "DOWN", color: "#ef4444" },
+};
+
+/** Poll every statusUrl once a minute; a fetch failure reads as down. */
+const useLiveHealth = (): Record<string, LiveHealth> => {
+  const [health, setHealth] = useState<Record<string, LiveHealth>>({});
+  useEffect(() => {
+    let cancelled = false;
+    const poll = () => {
+      for (const sys of SYSTEMS) {
+        if (!sys.statusUrl) continue;
+        fetch(sys.statusUrl, { cache: "no-store" })
+          .then((res) => res.json())
+          .then((body) => {
+            const overall: LiveHealth =
+              body.overall === "operational" || body.overall === "degraded" ? body.overall : "down";
+            if (!cancelled) setHealth((h) => ({ ...h, [sys.name]: overall }));
+          })
+          .catch(() => {
+            if (!cancelled) setHealth((h) => ({ ...h, [sys.name]: "down" }));
+          });
+      }
+    };
+    poll();
+    const id = setInterval(poll, 60_000);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+  return health;
+};
+
+const Systems = () => {
+  const health = useLiveHealth();
+  return (
   <section id="systems" className="py-32 border-t border-white/[0.06]">
     <div className="max-w-7xl mx-auto px-6">
       <motion.div
@@ -518,7 +566,8 @@ const Systems = () => (
 
       <div className="space-y-px">
         {SYSTEMS.map((sys, i) => {
-          const st = (statusLabel as Record<string, { label: string; color: string }>)[sys.status] ?? statusLabel.live;
+          const live = health[sys.name];
+          const st = live ? liveLabel[live] : statusLabel[sys.status];
           return (
             <motion.div
               key={sys.name}
@@ -563,7 +612,8 @@ const Systems = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 // ─── Footer ───────────────────────────────────────────────────────────────────
 
